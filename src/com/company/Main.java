@@ -74,7 +74,7 @@ public class Main extends Application {
                             if(logic.isItClickOnBoard(e.getX(), e.getY())) {
                                 logic.clickOnBoard(e.getX(), e.getY(), gc);
                             } else {
-                                logic.clickOfBoard(e.getX(), e.getY(), gc);
+                                logic.clickOfBoard(gc);
                             }
                         } else {
                             gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
