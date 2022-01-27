@@ -102,7 +102,7 @@ public class GameLogic {
                     strikeAvailable = false;
                     makeMove(temp.x, temp.y, getLastClickPosX(), getLastClickPosY());
                     temp = allExistingMovesUpLeft.get(0);
-                    board.piecesMatrix[temp.y][temp.x].owner.setPieceNumber(board.piecesMatrix[temp.y][temp.x].owner.getPieceNumber() - 1);
+                    board.piecesMatrix[temp.y][temp.x].getOwner().setPieceNumber(board.piecesMatrix[temp.y][temp.x].getOwner().getPieceNumber() - 1);
                     board.piecesMatrix[temp.y][temp.x] = null;
                     board.tilesMatrix[temp.y][temp.x].setOccupied(false);
                     resetLegalMovesArrays();
@@ -170,7 +170,7 @@ public class GameLogic {
         boolean flag = false;
         for (int y = 0; y < board.tilesMatrix.length; y++) {
             for (int x = 0; x < board.tilesMatrix[y].length; x++) {
-                if(board.tilesMatrix[y][x].isOccupied && board.piecesMatrix[y][x].owner.isGoingFirst == turn) {
+                if(board.tilesMatrix[y][x].isOccupied && board.piecesMatrix[y][x].getOwner().isGoingFirst == turn) {
                     legalMovesFinder(y, x, board.tilesMatrix, board.piecesMatrix);
                     if(legalMovesExist()) {
                         movesAvailable = true;
@@ -235,11 +235,11 @@ public class GameLogic {
     }
 
     public void findAllExistingTiles(int y, int x, Piece[][] piece) {
-        if(piece[y][x].type.isKing()) {
-            allExistingTilesFinder(y, x, piece[y][x].type.getMaxMove(), -1, true);
-            allExistingTilesFinder(y, x, piece[y][x].type.getMaxMove(), 1, false);
+        if(piece[y][x].getType().isKing()) {
+            allExistingTilesFinder(y, x, piece[y][x].getType().getMaxMove(), -1, true);
+            allExistingTilesFinder(y, x, piece[y][x].getType().getMaxMove(), 1, false);
         } else {
-            allExistingTilesFinder(y, x, piece[y][x].type.getMaxMove(), piece[y][x].type.getMoveDir(), piece[y][x].type.getMoveDir() == -1);
+            allExistingTilesFinder(y, x, piece[y][x].getType().getMaxMove(), piece[y][x].getType().getMoveDir(), piece[y][x].getType().getMoveDir() == -1);
         }
     }
 
@@ -279,7 +279,7 @@ public class GameLogic {
          */
         ArrayList<Point> delete = new ArrayList<>();
 
-        if(!board.piecesMatrix[y][x].type.isKing() && arrayList.size() == 2) {
+        if(!board.piecesMatrix[y][x].getType().isKing() && arrayList.size() == 2) {
             Point temp = arrayList.get(0);
             if(!board.tilesMatrix[temp.y][temp.x].isOccupied) {
                 temp = arrayList.get(1);
@@ -295,7 +295,7 @@ public class GameLogic {
             Point temp = arrayList.get(i);
 
             // For removing friendly pieces
-            if(board.tilesMatrix[temp.y][temp.x].isOccupied && (board.piecesMatrix[temp.y][temp.x].owner == board.piecesMatrix[y][x].owner)) {
+            if(board.tilesMatrix[temp.y][temp.x].isOccupied && (board.piecesMatrix[temp.y][temp.x].getOwner() == board.piecesMatrix[y][x].getOwner())) {
                 flagFriendly = true;
             }
             if(flagFriendly) {
@@ -321,7 +321,7 @@ public class GameLogic {
             }
 
             // For removing enemy piece if it's last in an array
-            if(board.tilesMatrix[temp.y][temp.x].isOccupied && board.piecesMatrix[temp.y][temp.x].owner != board.piecesMatrix[y][x].owner && (i == arrayList.size() - 1)) {
+            if(board.tilesMatrix[temp.y][temp.x].isOccupied && board.piecesMatrix[temp.y][temp.x].getOwner() != board.piecesMatrix[y][x].getOwner() && (i == arrayList.size() - 1)) {
                 delete.add(new Point(temp.x, temp.y));
             }
 
@@ -409,10 +409,10 @@ public class GameLogic {
         board.tilesMatrix[oldY][oldX].setOccupied(false);
         board.piecesMatrix[oldY][oldX] = null;
         activeTileOn = false;
-        if(board.piecesMatrix[newY][newX].type == PieceType.BlackDefault && newY == 0) {
+        if(board.piecesMatrix[newY][newX].getType() == PieceType.BlackDefault && newY == 0) {
             board.piecesMatrix[newY][newX].setType(PieceType.BlackKing);
         }
-        if(board.piecesMatrix[newY][newX].type == PieceType.WhiteDefault && newY == 7) {
+        if(board.piecesMatrix[newY][newX].getType() == PieceType.WhiteDefault && newY == 7) {
             board.piecesMatrix[newY][newX].setType(PieceType.WhiteKing);
         }
     }

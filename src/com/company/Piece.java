@@ -4,9 +4,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class Piece {
-    public Player owner;
-    public double graphicPosX, graphicPosY, diameter;
-    public PieceType type;
+    final private Player owner;
+    private double graphicPosX, graphicPosY;
+    final private double diameter;
+    private PieceType type;
 
     public Piece(Player owner, double graphicPosX, double graphicPosY, double diameter) {
         this.owner = owner;
@@ -30,32 +31,12 @@ public class Piece {
         return owner;
     }
 
-    public void setOwner(Player owner) {
-        this.owner = owner;
-    }
-
-    public double getGraphicPosX() {
-        return graphicPosX;
-    }
-
     public void setGraphicPosX(double graphicPosX) {
         this.graphicPosX = graphicPosX;
     }
 
-    public double getGraphicPosY() {
-        return graphicPosY;
-    }
-
     public void setGraphicPosY(double graphicPosY) {
         this.graphicPosY = graphicPosY;
-    }
-
-    public double getDiameter() {
-        return diameter;
-    }
-
-    public void setDiameter(double diameter) {
-        this.diameter = diameter;
     }
 
     public PieceType getType() {
