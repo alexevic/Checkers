@@ -29,7 +29,7 @@ public class Board {
         tilesMatrix = new Tile[horizontalTileAmount][verticalTileAmount];
         for (int y = 0; y < tilesMatrix.length; y++) {
             for (int x = 0; x < tilesMatrix[y].length; x++) {
-                tilesMatrix[y][x] = new Tile(x, y, graphicPosX + (x * tileEdge), graphicPosY + (y * tileEdge), tileEdge,tileEdge, false);
+                tilesMatrix[y][x] = new Tile(graphicPosX + (x * tileEdge), graphicPosY + (y * tileEdge), tileEdge,tileEdge, false);
                 drawTile(gc, y, x);
             }
         }

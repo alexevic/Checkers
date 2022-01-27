@@ -170,7 +170,7 @@ public class GameLogic {
         boolean flag = false;
         for (int y = 0; y < board.tilesMatrix.length; y++) {
             for (int x = 0; x < board.tilesMatrix[y].length; x++) {
-                if(board.tilesMatrix[y][x].isOccupied && board.piecesMatrix[y][x].getOwner().isGoingFirst() == turn) {
+                if(board.tilesMatrix[y][x].isOccupied() && board.piecesMatrix[y][x].getOwner().isGoingFirst() == turn) {
                     legalMovesFinder(y, x, board.tilesMatrix, board.piecesMatrix);
                     if(legalMovesExist()) {
                         movesAvailable = true;
@@ -281,7 +281,7 @@ public class GameLogic {
 
         if(!board.piecesMatrix[y][x].getType().isKing() && arrayList.size() == 2) {
             Point temp = arrayList.get(0);
-            if(!board.tilesMatrix[temp.y][temp.x].isOccupied) {
+            if(!board.tilesMatrix[temp.y][temp.x].isOccupied()) {
                 temp = arrayList.get(1);
                 delete.add(new Point(temp.x, temp.y));
             }
@@ -295,7 +295,7 @@ public class GameLogic {
             Point temp = arrayList.get(i);
 
             // For removing friendly pieces
-            if(board.tilesMatrix[temp.y][temp.x].isOccupied && (board.piecesMatrix[temp.y][temp.x].getOwner() == board.piecesMatrix[y][x].getOwner())) {
+            if(board.tilesMatrix[temp.y][temp.x].isOccupied() && (board.piecesMatrix[temp.y][temp.x].getOwner() == board.piecesMatrix[y][x].getOwner())) {
                 flagFriendly = true;
             }
             if(flagFriendly) {
@@ -303,7 +303,7 @@ public class GameLogic {
             }
 
             // For removing double pieces
-            if(board.tilesMatrix[temp.y][temp.x].isOccupied) {
+            if(board.tilesMatrix[temp.y][temp.x].isOccupied()) {
                 tilesInARow++;
                 if(tilesInARow >= 2) {
                     if(tilesInARow == 2) {
@@ -321,7 +321,7 @@ public class GameLogic {
             }
 
             // For removing enemy piece if it's last in an array
-            if(board.tilesMatrix[temp.y][temp.x].isOccupied && board.piecesMatrix[temp.y][temp.x].getOwner() != board.piecesMatrix[y][x].getOwner() && (i == arrayList.size() - 1)) {
+            if(board.tilesMatrix[temp.y][temp.x].isOccupied() && board.piecesMatrix[temp.y][temp.x].getOwner() != board.piecesMatrix[y][x].getOwner() && (i == arrayList.size() - 1)) {
                 delete.add(new Point(temp.x, temp.y));
             }
 
@@ -336,7 +336,7 @@ public class GameLogic {
         ArrayList<Point> delete = new ArrayList<>();
         int enemyPieces = 0;
         for (Point temp : arrayList) {
-            if (board.tilesMatrix[temp.y][temp.x].isOccupied) {
+            if (board.tilesMatrix[temp.y][temp.x].isOccupied()) {
                 enemyPieces++;
             }
             if (enemyPieces >= 2) {
@@ -355,7 +355,7 @@ public class GameLogic {
         ArrayList<Point> delete = new ArrayList<>();
         boolean flag = false;
         for (Point temp : arrayList) {
-            if (board.tilesMatrix[temp.y][temp.x].isOccupied) {
+            if (board.tilesMatrix[temp.y][temp.x].isOccupied()) {
                 flag = true;
             }
             if(!flag) {
@@ -370,7 +370,7 @@ public class GameLogic {
 
     public boolean hasPiecesToStrike(ArrayList<Point> arrayList) {
         for (Point temp : arrayList) {
-            if (board.tilesMatrix[temp.y][temp.x].isOccupied) {
+            if (board.tilesMatrix[temp.y][temp.x].isOccupied()) {
                 return true;
             }
         }
@@ -428,7 +428,7 @@ public class GameLogic {
 
     private void showLegalMovesForGivenDirection(ArrayList<Point> left, ArrayList<Point> right) {
         for (Point temp : left) {
-            if(board.tilesMatrix[temp.y][temp.x].isOccupied) {
+            if(board.tilesMatrix[temp.y][temp.x].isOccupied()) {
                 board.tilesMatrix[temp.y][temp.x].setType(TileType.Strikable);
             } else {
                 board.tilesMatrix[temp.y][temp.x].setType(TileType.Accessible);
@@ -436,7 +436,7 @@ public class GameLogic {
         }
 
         for (Point temp : right) {
-            if(board.tilesMatrix[temp.y][temp.x].isOccupied) {
+            if(board.tilesMatrix[temp.y][temp.x].isOccupied()) {
                 board.tilesMatrix[temp.y][temp.x].setType(TileType.Strikable);
             } else {
                 board.tilesMatrix[temp.y][temp.x].setType(TileType.Accessible);
