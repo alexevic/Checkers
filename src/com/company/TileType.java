@@ -7,7 +7,7 @@ public enum TileType {
     Dark(Color.GRAY),
     Active(Color.ORANGE),
     Accessible(Color.LIMEGREEN),
-    Strikable(Color.RED);
+    Kill(Color.RED);
 
     final private Color tileColor;
 

@@ -6,11 +6,11 @@ import javafx.scene.text.Font;
 
 
 public class Board {
-    public Tile[][] tilesMatrix;
-    public Piece[][] piecesMatrix;
-    public Player player1, player2;
-    public double graphicPosX, graphicPosY, tileEdge, piecePadding;
-    public int horizontalTileAmount, verticalTileAmount;
+    private Tile[][] tilesMatrix;
+    private Piece[][] piecesMatrix;
+    final private Player player1, player2;
+    final private double graphicPosX, graphicPosY, tileEdge, piecePadding;
+    final private int horizontalTileAmount, verticalTileAmount;
 
     public Board(double graphicPosX, double graphicPosY, double tileEdge, double piecePadding, int horizontalTileAmount, int verticalTileAmount, GraphicsContext gc, Player player1, Player player2) {
         this.graphicPosX = graphicPosX;
@@ -99,9 +99,9 @@ public class Board {
             }
         }
         if(turn) {
-            drawMessage(gc, "Turn: (B) " + player1.getName() + "!", graphicPosX, 40);
+            drawMessage(gc, "Turn: (B) " + player1.getName() + "! (" + player1.getPieceNumber() + ")", graphicPosX, 40);
         } else {
-            drawMessage(gc, "Turn: (W) " + player2.getName() + "!", graphicPosX, 40);
+            drawMessage(gc, "Turn: (W) " + player2.getName() + "! (" + player2.getPieceNumber() + ")", graphicPosX, 40);
         }
 
         if(strikeAvailable) {
@@ -116,48 +116,16 @@ public class Board {
         return tilesMatrix;
     }
 
-    public void setTilesMatrix(Tile[][] tilesMatrix) {
-        this.tilesMatrix = tilesMatrix;
+    public Piece[][] getPiecesMatrix() {
+        return piecesMatrix;
     }
 
     public double getGraphicPosX() {
         return graphicPosX;
     }
 
-    public void setGraphicPosX(double graphicPosX) {
-        this.graphicPosX = graphicPosX;
-    }
-
-    public double getGraphicPosY() {
-        return graphicPosY;
-    }
-
-    public void setGraphicPosY(double graphicPosY) {
-        this.graphicPosY = graphicPosY;
-    }
-
-    public int getHorizontalTileAmount() {
-        return horizontalTileAmount;
-    }
-
-    public void setHorizontalTileAmount(int horizontalTileAmount) {
-        this.horizontalTileAmount = horizontalTileAmount;
-    }
-
-    public int getVerticalTileAmount() {
-        return verticalTileAmount;
-    }
-
-    public void setVerticalTileAmount(int verticalTileAmount) {
-        this.verticalTileAmount = verticalTileAmount;
-    }
-
     public double getPiecePadding() {
         return piecePadding;
-    }
-
-    public void setPiecePadding(double piecePadding) {
-        this.piecePadding = piecePadding;
     }
 }
 

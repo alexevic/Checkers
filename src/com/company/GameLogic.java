@@ -7,15 +7,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameLogic {
-    public Board board;
-    public ArrayList<Point> allExistingMovesUpLeft = new ArrayList<>();
-    public ArrayList<Point> allExistingMovesUpRight = new ArrayList<>();
-    public ArrayList<Point> allExistingMovesDownLeft = new ArrayList<>();
-    public ArrayList<Point> allExistingMovesDownRight = new ArrayList<>();
-    public ArrayList<Point> accessibleTilesCoordinates = new ArrayList<>();
-    public ArrayList<Point> movableTilesCoordinates = new ArrayList<>();
-    public int currentClickPosX, currentClickPosY, lastClickPosX, lastClickPosY, axisBorderMaxValue = 8, axisBorderMinValue = -1;
-    public boolean activeTileOn = false, tileHasStrike = false, strikeAvailable = false, turn = true, movesAvailable = false; //true = player1/black, false = player2/white
+    final private Board board;
+    final private ArrayList<Point> allExistingMovesUpLeft = new ArrayList<>();
+    final private ArrayList<Point> allExistingMovesUpRight = new ArrayList<>();
+    final private ArrayList<Point> allExistingMovesDownLeft = new ArrayList<>();
+    final private ArrayList<Point> allExistingMovesDownRight = new ArrayList<>();
+    final private ArrayList<Point> accessibleTilesCoordinates = new ArrayList<>();
+    final private ArrayList<Point> movableTilesCoordinates = new ArrayList<>();
+    private int currentClickPosX, currentClickPosY, lastClickPosX, lastClickPosY;
+    private boolean activeTileOn = false, tileHasStrike = false, strikeAvailable = false, turn = true, movesAvailable = false; //true = player1/black, false = player2/white
 
     GameLogic(GraphicsContext gc, Player player1, Player player2) {
         this.board = new Board(50,50, 50,5,8,8, gc, player1, player2);
@@ -28,7 +28,7 @@ public class GameLogic {
     public void clickOnBoard(double mouseX, double mouseY, GraphicsContext gc) {
         currentClickPos(mouseX, mouseY);
         if(activeTileOn) {
-            legalMovesFinder(getLastClickPosY(), getLastClickPosX(), board.tilesMatrix, board.piecesMatrix);
+            legalMovesFinder(getLastClickPosY(), getLastClickPosX(), board.getPiecesMatrix());
             if(strikeAvailable) {
                 checksForSameClick(gc);
                 allExistingMovesWhenStrikeAvailable(allExistingMovesUpLeft, allExistingMovesUpRight);
@@ -57,11 +57,11 @@ public class GameLogic {
                 if (getCurrentClickPosX() == temp.x && getCurrentClickPosY() == temp.y) {
                     resetLegalMovesArrays();
                     accessibleTilesCoordinates.clear();
-                    legalMovesFinder(temp.y, temp.x, board.tilesMatrix, board.piecesMatrix);
+                    legalMovesFinder(temp.y, temp.x, board.getPiecesMatrix());
                     showLegalMoves();
                     activeTileOn = true;
                 } else {
-                    board.tilesMatrix[temp.y][temp.x].setType(TileType.Dark);
+                    board.getTilesMatrix()[temp.y][temp.x].setType(TileType.Dark);
                 }
             }
         }
@@ -102,11 +102,11 @@ public class GameLogic {
                     strikeAvailable = false;
                     makeMove(temp.x, temp.y, getLastClickPosX(), getLastClickPosY());
                     temp = allExistingMovesUpLeft.get(0);
-                    board.piecesMatrix[temp.y][temp.x].getOwner().setPieceNumber(board.piecesMatrix[temp.y][temp.x].getOwner().getPieceNumber() - 1);
-                    board.piecesMatrix[temp.y][temp.x] = null;
-                    board.tilesMatrix[temp.y][temp.x].setOccupied(false);
+                    board.getPiecesMatrix()[temp.y][temp.x].getOwner().setPieceNumber(board.getPiecesMatrix()[temp.y][temp.x].getOwner().getPieceNumber() - 1);
+                    board.getPiecesMatrix()[temp.y][temp.x] = null;
+                    board.getTilesMatrix()[temp.y][temp.x].setOccupied(false);
                     resetLegalMovesArrays();
-                    legalMovesFinder(getCurrentClickPosY(), getCurrentClickPosX(), board.tilesMatrix, board.piecesMatrix);
+                    legalMovesFinder(getCurrentClickPosY(), getCurrentClickPosX(), board.getPiecesMatrix());
                     if(!tileHasStrike) {
                         turn = !turn;
                     }
@@ -168,10 +168,10 @@ public class GameLogic {
 
     public void findTilesWithMovablePieces(GraphicsContext gc) {
         boolean flag = false;
-        for (int y = 0; y < board.tilesMatrix.length; y++) {
-            for (int x = 0; x < board.tilesMatrix[y].length; x++) {
-                if(board.tilesMatrix[y][x].isOccupied() && board.piecesMatrix[y][x].getOwner().isGoingFirst() == turn) {
-                    legalMovesFinder(y, x, board.tilesMatrix, board.piecesMatrix);
+        for (int y = 0; y < board.getTilesMatrix().length; y++) {
+            for (int x = 0; x < board.getTilesMatrix()[y].length; x++) {
+                if(board.getTilesMatrix()[y][x].isOccupied() && board.getPiecesMatrix()[y][x].getOwner().isGoingFirst() == turn) {
+                    legalMovesFinder(y, x, board.getPiecesMatrix());
                     if(legalMovesExist()) {
                         movesAvailable = true;
                         if(strikeAvailable) {
@@ -195,7 +195,7 @@ public class GameLogic {
         board.updateBoard(gc, turn, strikeAvailable);
     }
 
-    public void legalMovesFinder(int y, int x, Tile[][] tile, Piece[][] piece) {
+    public void legalMovesFinder(int y, int x, Piece[][] piece) {
         findAllExistingTiles(y, x, piece);
 
         for (ArrayList<Point> arrayList : Arrays.asList(allExistingMovesUpLeft, allExistingMovesDownLeft, allExistingMovesUpRight, allExistingMovesDownRight)) {
@@ -252,6 +252,8 @@ public class GameLogic {
              * Finds all undergo possible moves on the left side.
              */
             tempLX--;
+            int axisBorderMinValue = -1;
+            int axisBorderMaxValue = 8;
             if(tempLX > axisBorderMinValue && tempY > axisBorderMinValue && tempY < axisBorderMaxValue) {
                 if(positive) {
                     allExistingMovesUpLeft.add(new Point(tempLX, tempY));
@@ -279,9 +281,9 @@ public class GameLogic {
          */
         ArrayList<Point> delete = new ArrayList<>();
 
-        if(!board.piecesMatrix[y][x].getType().isKing() && arrayList.size() == 2) {
+        if(!board.getPiecesMatrix()[y][x].getType().isKing() && arrayList.size() == 2) {
             Point temp = arrayList.get(0);
-            if(!board.tilesMatrix[temp.y][temp.x].isOccupied()) {
+            if(!board.getTilesMatrix()[temp.y][temp.x].isOccupied()) {
                 temp = arrayList.get(1);
                 delete.add(new Point(temp.x, temp.y));
             }
@@ -295,7 +297,7 @@ public class GameLogic {
             Point temp = arrayList.get(i);
 
             // For removing friendly pieces
-            if(board.tilesMatrix[temp.y][temp.x].isOccupied() && (board.piecesMatrix[temp.y][temp.x].getOwner() == board.piecesMatrix[y][x].getOwner())) {
+            if(board.getTilesMatrix()[temp.y][temp.x].isOccupied() && (board.getPiecesMatrix()[temp.y][temp.x].getOwner() == board.getPiecesMatrix()[y][x].getOwner())) {
                 flagFriendly = true;
             }
             if(flagFriendly) {
@@ -303,7 +305,7 @@ public class GameLogic {
             }
 
             // For removing double pieces
-            if(board.tilesMatrix[temp.y][temp.x].isOccupied()) {
+            if(board.getTilesMatrix()[temp.y][temp.x].isOccupied()) {
                 tilesInARow++;
                 if(tilesInARow >= 2) {
                     if(tilesInARow == 2) {
@@ -321,7 +323,7 @@ public class GameLogic {
             }
 
             // For removing enemy piece if it's last in an array
-            if(board.tilesMatrix[temp.y][temp.x].isOccupied() && board.piecesMatrix[temp.y][temp.x].getOwner() != board.piecesMatrix[y][x].getOwner() && (i == arrayList.size() - 1)) {
+            if(board.getTilesMatrix()[temp.y][temp.x].isOccupied() && board.getPiecesMatrix()[temp.y][temp.x].getOwner() != board.getPiecesMatrix()[y][x].getOwner() && (i == arrayList.size() - 1)) {
                 delete.add(new Point(temp.x, temp.y));
             }
 
@@ -336,7 +338,7 @@ public class GameLogic {
         ArrayList<Point> delete = new ArrayList<>();
         int enemyPieces = 0;
         for (Point temp : arrayList) {
-            if (board.tilesMatrix[temp.y][temp.x].isOccupied()) {
+            if (board.getTilesMatrix()[temp.y][temp.x].isOccupied()) {
                 enemyPieces++;
             }
             if (enemyPieces >= 2) {
@@ -355,7 +357,7 @@ public class GameLogic {
         ArrayList<Point> delete = new ArrayList<>();
         boolean flag = false;
         for (Point temp : arrayList) {
-            if (board.tilesMatrix[temp.y][temp.x].isOccupied()) {
+            if (board.getTilesMatrix()[temp.y][temp.x].isOccupied()) {
                 flag = true;
             }
             if(!flag) {
@@ -370,7 +372,7 @@ public class GameLogic {
 
     public boolean hasPiecesToStrike(ArrayList<Point> arrayList) {
         for (Point temp : arrayList) {
-            if (board.tilesMatrix[temp.y][temp.x].isOccupied()) {
+            if (board.getTilesMatrix()[temp.y][temp.x].isOccupied()) {
                 return true;
             }
         }
@@ -388,11 +390,11 @@ public class GameLogic {
 
     private void resetLegalMovesForDirection(ArrayList<Point> left, ArrayList<Point> right) {
         for (Point temp : left) {
-            board.tilesMatrix[temp.y][temp.x].setType(TileType.Dark);
+            board.getTilesMatrix()[temp.y][temp.x].setType(TileType.Dark);
         }
         left.clear();
         for (Point temp : right) {
-            board.tilesMatrix[temp.y][temp.x].setType(TileType.Dark);
+            board.getTilesMatrix()[temp.y][temp.x].setType(TileType.Dark);
         }
         right.clear();
     }
@@ -402,18 +404,18 @@ public class GameLogic {
      * */
 
     public void makeMove(int newX, int newY, int oldX, int oldY) {
-        board.piecesMatrix[newY][newX] = board.piecesMatrix[oldY][oldX];
-        board.piecesMatrix[newY][newX].setGraphicPosX(board.tilesMatrix[newY][newX].getGraphicPosX() + board.piecePadding);
-        board.piecesMatrix[newY][newX].setGraphicPosY(board.tilesMatrix[newY][newX].getGraphicPosY() + board.piecePadding);
-        board.tilesMatrix[newY][newX].setOccupied(true);
-        board.tilesMatrix[oldY][oldX].setOccupied(false);
-        board.piecesMatrix[oldY][oldX] = null;
+        board.getPiecesMatrix()[newY][newX] = board.getPiecesMatrix()[oldY][oldX];
+        board.getPiecesMatrix()[newY][newX].setGraphicPosX(board.getTilesMatrix()[newY][newX].getGraphicPosX() + board.getPiecePadding());
+        board.getPiecesMatrix()[newY][newX].setGraphicPosY(board.getTilesMatrix()[newY][newX].getGraphicPosY() + board.getPiecePadding());
+        board.getTilesMatrix()[newY][newX].setOccupied(true);
+        board.getTilesMatrix()[oldY][oldX].setOccupied(false);
+        board.getPiecesMatrix()[oldY][oldX] = null;
         activeTileOn = false;
-        if(board.piecesMatrix[newY][newX].getType() == PieceType.BlackDefault && newY == 0) {
-            board.piecesMatrix[newY][newX].setType(PieceType.BlackKing);
+        if(board.getPiecesMatrix()[newY][newX].getType() == PieceType.BlackDefault && newY == 0) {
+            board.getPiecesMatrix()[newY][newX].setType(PieceType.BlackKing);
         }
-        if(board.piecesMatrix[newY][newX].getType() == PieceType.WhiteDefault && newY == 7) {
-            board.piecesMatrix[newY][newX].setType(PieceType.WhiteKing);
+        if(board.getPiecesMatrix()[newY][newX].getType() == PieceType.WhiteDefault && newY == 7) {
+            board.getPiecesMatrix()[newY][newX].setType(PieceType.WhiteKing);
         }
     }
 
@@ -428,31 +430,31 @@ public class GameLogic {
 
     private void showLegalMovesForGivenDirection(ArrayList<Point> left, ArrayList<Point> right) {
         for (Point temp : left) {
-            if(board.tilesMatrix[temp.y][temp.x].isOccupied()) {
-                board.tilesMatrix[temp.y][temp.x].setType(TileType.Strikable);
+            if(board.getTilesMatrix()[temp.y][temp.x].isOccupied()) {
+                board.getTilesMatrix()[temp.y][temp.x].setType(TileType.Kill);
             } else {
-                board.tilesMatrix[temp.y][temp.x].setType(TileType.Accessible);
+                board.getTilesMatrix()[temp.y][temp.x].setType(TileType.Accessible);
             }
         }
 
         for (Point temp : right) {
-            if(board.tilesMatrix[temp.y][temp.x].isOccupied()) {
-                board.tilesMatrix[temp.y][temp.x].setType(TileType.Strikable);
+            if(board.getTilesMatrix()[temp.y][temp.x].isOccupied()) {
+                board.getTilesMatrix()[temp.y][temp.x].setType(TileType.Kill);
             } else {
-                board.tilesMatrix[temp.y][temp.x].setType(TileType.Accessible);
+                board.getTilesMatrix()[temp.y][temp.x].setType(TileType.Accessible);
             }
         }
     }
 
     public void drawMovableTiles(ArrayList<Point> arrayList) {
         for (Point temp : arrayList) {
-            board.tilesMatrix[temp.y][temp.x].setType(TileType.Active);
+            board.getTilesMatrix()[temp.y][temp.x].setType(TileType.Active);
         }
     }
 
     public void resetMovableTiles(ArrayList<Point> arrayList) {
         for (Point temp : arrayList) {
-            board.tilesMatrix[temp.y][temp.x].setType(TileType.Dark);
+            board.getTilesMatrix()[temp.y][temp.x].setType(TileType.Dark);
         }
         arrayList.clear();
     }
@@ -461,13 +463,25 @@ public class GameLogic {
      * GETTERS AND SETTERS
      */
 
+    public boolean isTurn() {
+        return turn;
+    }
+
+    public boolean isMovesAvailable() {
+        return movesAvailable;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
     public int getCurrentClickPosX() {
         return currentClickPosX;
     }
 
     public void setCurrentClickPosX(double mouseX) {
-        for (int x = 0; x < board.tilesMatrix.length; x++) {
-            if((board.tilesMatrix[0][x].getGraphicPosX() <= mouseX) && (board.tilesMatrix[0][x].getGraphicPosX() + board.tilesMatrix[0][x].getWidth()) >= mouseX) {
+        for (int x = 0; x < board.getTilesMatrix().length; x++) {
+            if((board.getTilesMatrix()[0][x].getGraphicPosX() <= mouseX) && (board.getTilesMatrix()[0][x].getGraphicPosX() + board.getTilesMatrix()[0][x].getWidth()) >= mouseX) {
                 this.currentClickPosX = x;
             }
         }
@@ -478,8 +492,8 @@ public class GameLogic {
     }
 
     public void setCurrentClickPosY(double mouseY) {
-        for (int y = 0; y < board.tilesMatrix.length; y++) {
-            if((board.tilesMatrix[y][0].getGraphicPosY() <= mouseY) && (board.tilesMatrix[y][0].getGraphicPosY() + board.tilesMatrix[y][0].getHeight() >= mouseY)) {
+        for (int y = 0; y < board.getTilesMatrix().length; y++) {
+            if((board.getTilesMatrix()[y][0].getGraphicPosY() <= mouseY) && (board.getTilesMatrix()[y][0].getGraphicPosY() + board.getTilesMatrix()[y][0].getHeight() >= mouseY)) {
                 this.currentClickPosY = y;
             }
         }
@@ -500,13 +514,4 @@ public class GameLogic {
     public void setLastClickPosY(int lastClickPosY) {
         this.lastClickPosY = lastClickPosY;
     }
-
-    public boolean isActiveTileOn() {
-        return activeTileOn;
-    }
-
-    public void setActiveTileOn(boolean activeTileOn) {
-        this.activeTileOn = activeTileOn;
-    }
-
 }

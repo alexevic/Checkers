@@ -52,25 +52,13 @@ public class Main extends Application {
         }
 
         GameLogic logic = new GameLogic(gc, player1, player2);
-        drawMessage(gc, "Click anywhere to start!", logic.board.graphicPosX, 40, 22);
+        drawMessage(gc, "Click anywhere to start!", logic.getBoard().getGraphicPosX(), 40, 22);
         mainScene.setOnMouseClicked(
                 new EventHandler<MouseEvent>() {
                     public void handle(MouseEvent e)
                     {
-                        if(player1.getPieceNumber() == 0) {
-                            gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
-                            drawMessage(gc, player1.getName() + " lost!", 150,300,40);
-                            drawMessage(gc, "Lost all pieces!", 150,350,40);
-                        }
-
-                        if(player2.getPieceNumber() == 0) {
-                            gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
-                            drawMessage(gc, player2.getName() + " lost!", 150,300, 40);
-                            drawMessage(gc, "Lost all pieces!", 150,350, 40);
-                        }
-
                         logic.findTilesWithMovablePieces(gc);
-                        if(logic.movesAvailable) {
+                        if(logic.isMovesAvailable()) {
                             if(logic.isItClickOnBoard(e.getX(), e.getY())) {
                                 logic.clickOnBoard(e.getX(), e.getY(), gc);
                             } else {
@@ -78,12 +66,16 @@ public class Main extends Application {
                             }
                         } else {
                             gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
-                            if(player1.isGoingFirst() == logic.turn) {
+                            if(player1.isGoingFirst() == logic.isTurn()) {
                                 drawMessage(gc, player1.getName() + " lost!", 150,300, 40);
                             } else {
                                 drawMessage(gc, player2.getName() + " lost!", 150,300, 40);
                             }
-                            drawMessage(gc, "Can't move!", 150,350, 40);
+                            if(player1.getPieceNumber() == 0 || player2.getPieceNumber() == 0) {
+                                drawMessage(gc, "Lost all pieces!", 150,350,40);
+                            } else {
+                                drawMessage(gc, "Can't move!", 150,350, 40);
+                            }
                         }
                     }
                 });
