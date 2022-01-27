@@ -196,7 +196,7 @@ public class GameLogic {
     }
 
     public void legalMovesFinder(int y, int x, Tile[][] tile, Piece[][] piece) {
-        findAllExistingTiles(y, x, tile, piece);
+        findAllExistingTiles(y, x, piece);
 
         for (ArrayList<Point> arrayList : Arrays.asList(allExistingMovesUpLeft, allExistingMovesDownLeft, allExistingMovesUpRight, allExistingMovesDownRight)) {
             removeIllegalTilesFromAllExistingTiles(y, x, arrayList);
@@ -234,12 +234,12 @@ public class GameLogic {
         }
     }
 
-    public void findAllExistingTiles(int y, int x, Tile[][] tile, Piece[][] piece) {
+    public void findAllExistingTiles(int y, int x, Piece[][] piece) {
         if(piece[y][x].type.isKing()) {
-            allExistingTilesFinder(y, x, piece[y][x].type.maxMove, -1, true);
-            allExistingTilesFinder(y, x, piece[y][x].type.maxMove, 1, false);
+            allExistingTilesFinder(y, x, piece[y][x].type.getMaxMove(), -1, true);
+            allExistingTilesFinder(y, x, piece[y][x].type.getMaxMove(), 1, false);
         } else {
-            allExistingTilesFinder(y, x, piece[y][x].type.maxMove, piece[y][x].type.moveDir, piece[y][x].type.moveDir == -1);
+            allExistingTilesFinder(y, x, piece[y][x].type.getMaxMove(), piece[y][x].type.getMoveDir(), piece[y][x].type.getMoveDir() == -1);
         }
     }
 

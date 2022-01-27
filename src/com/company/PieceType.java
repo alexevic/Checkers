@@ -8,9 +8,9 @@ public enum PieceType {
     BlackDefault(false, Color.BLACK, -1, 2),
     BlackKing(true, Color.BLACK, 0, 8);
 
-    private boolean isKing;
-    private Color pieceColor;
-    public int moveDir, maxMove;
+    final private boolean isKing;
+    final private Color pieceColor;
+    final private int moveDir, maxMove;
 
     PieceType(boolean isKing, Color pieceColor, int moveDir, int maxMove) {
         this.isKing = isKing;
@@ -23,23 +23,15 @@ public enum PieceType {
         return isKing;
     }
 
-    public void setKing(boolean king) {
-        isKing = king;
-    }
-
     public Color getPieceColor() {
         return pieceColor;
-    }
-
-    public void setPieceColor(Color pieceColor) {
-        this.pieceColor = pieceColor;
     }
 
     public int getMoveDir() {
         return moveDir;
     }
 
-    public void setMoveDir(int moveDir) {
-        this.moveDir = moveDir;
+    public int getMaxMove() {
+        return maxMove;
     }
 }
