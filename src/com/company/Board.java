@@ -99,9 +99,9 @@ public class Board {
             }
         }
         if(turn) {
-            drawMessage(gc, "Turn: (B) " + player1.name + "!", graphicPosX, 40);
+            drawMessage(gc, "Turn: (B) " + player1.getName() + "!", graphicPosX, 40);
         } else {
-            drawMessage(gc, "Turn: (W) " + player2.name + "!", graphicPosX, 40);
+            drawMessage(gc, "Turn: (W) " + player2.getName() + "!", graphicPosX, 40);
         }
 
         if(strikeAvailable) {

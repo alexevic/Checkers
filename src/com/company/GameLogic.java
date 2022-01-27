@@ -170,7 +170,7 @@ public class GameLogic {
         boolean flag = false;
         for (int y = 0; y < board.tilesMatrix.length; y++) {
             for (int x = 0; x < board.tilesMatrix[y].length; x++) {
-                if(board.tilesMatrix[y][x].isOccupied && board.piecesMatrix[y][x].getOwner().isGoingFirst == turn) {
+                if(board.tilesMatrix[y][x].isOccupied && board.piecesMatrix[y][x].getOwner().isGoingFirst() == turn) {
                     legalMovesFinder(y, x, board.tilesMatrix, board.piecesMatrix);
                     if(legalMovesExist()) {
                         movesAvailable = true;
