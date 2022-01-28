@@ -322,6 +322,10 @@ public class GameLogic {
                 }
             }
 
+            if(flagDoublePiece) {
+                delete.add(new Point(temp.x, temp.y));
+            }
+
             // For removing enemy piece if it's last in an array
             if(board.getTilesMatrix()[temp.y][temp.x].isOccupied() && board.getPiecesMatrix()[temp.y][temp.x].getOwner() != board.getPiecesMatrix()[y][x].getOwner() && (i == arrayList.size() - 1)) {
                 delete.add(new Point(temp.x, temp.y));

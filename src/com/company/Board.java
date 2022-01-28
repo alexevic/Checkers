@@ -4,7 +4,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-
 public class Board {
     private Tile[][] tilesMatrix;
     private Piece[][] piecesMatrix;
