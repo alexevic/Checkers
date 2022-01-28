@@ -11,8 +11,9 @@ public class Board {
     final private Player player1, player2;
     final private double graphicPosX, graphicPosY, tileEdge, piecePadding;
     final private int horizontalTileAmount, verticalTileAmount;
+    private static Board instance;
 
-    public Board(double graphicPosX, double graphicPosY, double tileEdge, double piecePadding, int horizontalTileAmount, int verticalTileAmount, GraphicsContext gc, Player player1, Player player2) {
+    private Board(double graphicPosX, double graphicPosY, double tileEdge, double piecePadding, int horizontalTileAmount, int verticalTileAmount, GraphicsContext gc, Player player1, Player player2) {
         this.graphicPosX = graphicPosX;
         this.graphicPosY = graphicPosY;
         this.horizontalTileAmount = horizontalTileAmount;
@@ -23,6 +24,13 @@ public class Board {
         this.player2 = player2;
         createTileMatrix(gc);
         createPieces(gc, player1, player2);
+    }
+
+    public static Board getInstance(double graphicPosX, double graphicPosY, double tileEdge, double piecePadding, int horizontalTileAmount, int verticalTileAmount, GraphicsContext gc, Player player1, Player player2) {
+        if(instance == null) {
+            instance = new Board(graphicPosX, graphicPosY, tileEdge, piecePadding, horizontalTileAmount, verticalTileAmount, gc, player1, player2);
+        }
+        return instance;
     }
 
     private void createTileMatrix(GraphicsContext gc) {

@@ -18,7 +18,7 @@ public class GameLogic {
     private boolean activeTileOn = false, tileHasStrike = false, strikeAvailable = false, turn = true, movesAvailable = false; //true = player1/black, false = player2/white
 
     GameLogic(GraphicsContext gc, Player player1, Player player2) {
-        this.board = new Board(50,50, 50,5,8,8, gc, player1, player2);
+        this.board = Board.getInstance(50,50, 50,5,8,8, gc, player1, player2);
     }
 
     /**
@@ -146,19 +146,19 @@ public class GameLogic {
         return mouseX >= 50 && mouseY >= 50 && mouseX <= 450 && mouseY <= 450;
     }
 
-    public void currentClickPos(double mouseX, double mouseY) {
+    private void currentClickPos(double mouseX, double mouseY) {
         if(isItClickOnBoard(mouseX, mouseY)) {
             setCurrentClickPosX(mouseX);
             setCurrentClickPosY(mouseY);
         }
     }
 
-    public void lastClickPos() {
+    private void lastClickPos() {
         setLastClickPosX(getCurrentClickPosX());
         setLastClickPosY(getCurrentClickPosY());
     }
 
-    public boolean isItSameClickPos(int x1, int y1, int x2, int y2) {
+    private boolean isItSameClickPos(int x1, int y1, int x2, int y2) {
         return x1 == x2 && y1 == y2;
     }
 
@@ -195,7 +195,7 @@ public class GameLogic {
         board.updateBoard(gc, turn, strikeAvailable);
     }
 
-    public void legalMovesFinder(int y, int x, Piece[][] piece) {
+    private void legalMovesFinder(int y, int x, Piece[][] piece) {
         findAllExistingTiles(y, x, piece);
 
         for (ArrayList<Point> arrayList : Arrays.asList(allExistingMovesUpLeft, allExistingMovesDownLeft, allExistingMovesUpRight, allExistingMovesDownRight)) {
@@ -234,7 +234,7 @@ public class GameLogic {
         }
     }
 
-    public void findAllExistingTiles(int y, int x, Piece[][] piece) {
+    private void findAllExistingTiles(int y, int x, Piece[][] piece) {
         if(piece[y][x].getType().isKing()) {
             allExistingTilesFinder(y, x, piece[y][x].getType().getMaxMove(), -1, true);
             allExistingTilesFinder(y, x, piece[y][x].getType().getMaxMove(), 1, false);
@@ -243,7 +243,7 @@ public class GameLogic {
         }
     }
 
-    public void allExistingTilesFinder(int y, int x, int maxMove, int direction, boolean positive) {
+    private void allExistingTilesFinder(int y, int x, int maxMove, int direction, boolean positive) {
         int tempLX = x, tempRX = x, tempY = y, tempMoves = maxMove;
         while(tempMoves > 0) {
             tempMoves--;
@@ -275,7 +275,7 @@ public class GameLogic {
         }
     }
 
-    public void removeIllegalTilesFromAllExistingTiles(int y, int x, ArrayList<Point> arrayList) {
+    private void removeIllegalTilesFromAllExistingTiles(int y, int x, ArrayList<Point> arrayList) {
         /**
          * Friendly pieces, double enemy pieces, if last tile has enemy piece
          */
@@ -334,7 +334,7 @@ public class GameLogic {
         }
     }
 
-    public void removeDoubleStrike(ArrayList<Point> arrayList) {
+    private void removeDoubleStrike(ArrayList<Point> arrayList) {
         ArrayList<Point> delete = new ArrayList<>();
         int enemyPieces = 0;
         for (Point temp : arrayList) {
@@ -353,7 +353,7 @@ public class GameLogic {
         }
     }
 
-    public void strikingMoveTilesFilter(ArrayList<Point> arrayList) {
+    private void strikingMoveTilesFilter(ArrayList<Point> arrayList) {
         ArrayList<Point> delete = new ArrayList<>();
         boolean flag = false;
         for (Point temp : arrayList) {
@@ -370,7 +370,7 @@ public class GameLogic {
         }
     }
 
-    public boolean hasPiecesToStrike(ArrayList<Point> arrayList) {
+    private boolean hasPiecesToStrike(ArrayList<Point> arrayList) {
         for (Point temp : arrayList) {
             if (board.getTilesMatrix()[temp.y][temp.x].isOccupied()) {
                 return true;
@@ -379,11 +379,11 @@ public class GameLogic {
         return false;
     }
 
-    public boolean legalMovesExist() {
+    private boolean legalMovesExist() {
         return !allExistingMovesUpLeft.isEmpty() || !allExistingMovesDownLeft.isEmpty() || !allExistingMovesUpRight.isEmpty() || !allExistingMovesDownRight.isEmpty();
     }
 
-    public void resetLegalMovesArrays() {
+    private void resetLegalMovesArrays() {
         resetLegalMovesForDirection(allExistingMovesUpLeft, allExistingMovesUpRight);
         resetLegalMovesForDirection(allExistingMovesDownLeft, allExistingMovesDownRight);
     }
@@ -403,7 +403,7 @@ public class GameLogic {
      * MAKING MOVES
      * */
 
-    public void makeMove(int newX, int newY, int oldX, int oldY) {
+    private void makeMove(int newX, int newY, int oldX, int oldY) {
         board.getPiecesMatrix()[newY][newX] = board.getPiecesMatrix()[oldY][oldX];
         board.getPiecesMatrix()[newY][newX].setGraphicPosX(board.getTilesMatrix()[newY][newX].getGraphicPosX() + board.getPiecePadding());
         board.getPiecesMatrix()[newY][newX].setGraphicPosY(board.getTilesMatrix()[newY][newX].getGraphicPosY() + board.getPiecePadding());
@@ -423,7 +423,7 @@ public class GameLogic {
      * DRAWING TO SCREEN
      * */
 
-    public void showLegalMoves() {
+    private void showLegalMoves() {
         showLegalMovesForGivenDirection(allExistingMovesUpLeft, allExistingMovesUpRight);
         showLegalMovesForGivenDirection(allExistingMovesDownLeft, allExistingMovesDownRight);
     }
@@ -446,13 +446,13 @@ public class GameLogic {
         }
     }
 
-    public void drawMovableTiles(ArrayList<Point> arrayList) {
+    private void drawMovableTiles(ArrayList<Point> arrayList) {
         for (Point temp : arrayList) {
             board.getTilesMatrix()[temp.y][temp.x].setType(TileType.Active);
         }
     }
 
-    public void resetMovableTiles(ArrayList<Point> arrayList) {
+    private void resetMovableTiles(ArrayList<Point> arrayList) {
         for (Point temp : arrayList) {
             board.getTilesMatrix()[temp.y][temp.x].setType(TileType.Dark);
         }
