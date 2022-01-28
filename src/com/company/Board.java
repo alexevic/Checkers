@@ -25,7 +25,7 @@ public class Board {
         createPieces(gc, player1, player2);
     }
 
-    public void createTileMatrix(GraphicsContext gc) {
+    private void createTileMatrix(GraphicsContext gc) {
         tilesMatrix = new Tile[horizontalTileAmount][verticalTileAmount];
         for (int y = 0; y < tilesMatrix.length; y++) {
             for (int x = 0; x < tilesMatrix[y].length; x++) {
@@ -33,10 +33,10 @@ public class Board {
                 drawTile(gc, y, x);
             }
         }
-        drawBoarder(gc, Color.BLACK, 4);
+        drawBoarder(gc);
     }
 
-    public void drawTile(GraphicsContext gc, int y, int x) {
+    private void drawTile(GraphicsContext gc, int y, int x) {
         if((x + y) % 2 == 0) {
             tilesMatrix[y][x].setType(TileType.Light);
         } else {
@@ -45,7 +45,7 @@ public class Board {
         tilesMatrix[y][x].draw(gc);
     }
 
-    public void createPieces(GraphicsContext gc, Player player1, Player player2) {
+    private void createPieces(GraphicsContext gc, Player player1, Player player2) {
         piecesMatrix = new Piece[horizontalTileAmount][verticalTileAmount];
         for (int y = 0; y < piecesMatrix.length; y++) {
             for (int x = 0; x < piecesMatrix[y].length; x++) {
@@ -66,10 +66,10 @@ public class Board {
         piecesMatrix[y][x].draw(gc);
     }
 
-    public void drawBoarder(GraphicsContext gc, Color color, double width) {
-        gc.setStroke(color);
-        gc.setLineWidth(width);
-        gc.strokeRect(graphicPosX - (width / 2), graphicPosY - (width / 2), (horizontalTileAmount * tileEdge) + width, (verticalTileAmount * tileEdge) + width);
+    private void drawBoarder(GraphicsContext gc) {
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(4);
+        gc.strokeRect(graphicPosX - ((double) 4 / 2), graphicPosY - ((double) 4 / 2), (horizontalTileAmount * tileEdge) + (double) 4, (verticalTileAmount * tileEdge) + (double) 4);
         gc.setFont(new Font("Arial", 13));
         gc.setFill(Color.BLACK);
         for(int i = 65, x = 0; i < 73; i++, x++){
@@ -94,7 +94,11 @@ public class Board {
         for (int y = 0; y < verticalTileAmount; y++) {
             for (int x = 0; x < horizontalTileAmount; x++) {
                 if(tilesMatrix[y][x].isOccupied()) {
-                    piecesMatrix[y][x].draw(gc);
+                    if(piecesMatrix[y][x].getType().isKing()) {
+                        piecesMatrix[y][x].draw(gc, 3);
+                    } else {
+                        piecesMatrix[y][x].draw(gc);
+                    }
                 }
             }
         }
@@ -108,7 +112,7 @@ public class Board {
             drawMessage(gc, "Strike available!", graphicPosX, 500);
         }
 
-        drawBoarder(gc, Color.BLACK, 4);
+        drawBoarder(gc);
 
     }
 

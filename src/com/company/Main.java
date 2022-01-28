@@ -67,14 +67,14 @@ public class Main extends Application {
                         } else {
                             gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
                             if(player1.isGoingFirst() == logic.isTurn()) {
-                                drawMessage(gc, player1.getName() + " lost!", 150,300, 40);
+                                drawMessage(gc, player1.getName() + " lost!", 10,300, 40);
                             } else {
-                                drawMessage(gc, player2.getName() + " lost!", 150,300, 40);
+                                drawMessage(gc, player2.getName() + " lost!", 10,300, 40);
                             }
                             if(player1.getPieceNumber() == 0 || player2.getPieceNumber() == 0) {
-                                drawMessage(gc, "Lost all pieces!", 150,350,40);
+                                drawMessage(gc, "Lost all pieces!", 10,350,40);
                             } else {
-                                drawMessage(gc, "Can't move!", 150,350, 40);
+                                drawMessage(gc, "Can't move!", 10,350, 40);
                             }
                         }
                     }

@@ -2,7 +2,7 @@ package com.company;
 
 import javafx.scene.canvas.GraphicsContext;
 
-public class Tile {
+public class Tile implements DrawableElement {
     final private double graphicPosX, graphicPosY, width, height;
     private TileType type;
     private boolean isOccupied;
