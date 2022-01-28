@@ -17,8 +17,12 @@ public class GameLogic {
     private int currentClickPosX, currentClickPosY, lastClickPosX, lastClickPosY;
     private boolean activeTileOn = false, tileHasStrike = false, strikeAvailable = false, turn = true, movesAvailable = false; //true = player1/black, false = player2/white
 
-    GameLogic(GraphicsContext gc, Player player1, Player player2) {
+    public GameLogic(GraphicsContext gc, Player player1, Player player2) {
         this.board = Board.getInstance(50,50, 50,5,8,8, gc, player1, player2);
+    }
+
+    public GameLogic(Board board) {
+        this.board = board;
     }
 
     /**
@@ -146,7 +150,7 @@ public class GameLogic {
         return mouseX >= 50 && mouseY >= 50 && mouseX <= 450 && mouseY <= 450;
     }
 
-    private void currentClickPos(double mouseX, double mouseY) {
+    public void currentClickPos(double mouseX, double mouseY) {
         if(isItClickOnBoard(mouseX, mouseY)) {
             setCurrentClickPosX(mouseX);
             setCurrentClickPosY(mouseY);
@@ -158,7 +162,7 @@ public class GameLogic {
         setLastClickPosY(getCurrentClickPosY());
     }
 
-    private boolean isItSameClickPos(int x1, int y1, int x2, int y2) {
+    public boolean isItSameClickPos(int x1, int y1, int x2, int y2) {
         return x1 == x2 && y1 == y2;
     }
 

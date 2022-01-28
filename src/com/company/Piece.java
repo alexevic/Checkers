@@ -27,8 +27,6 @@ public class Piece extends Shape {
     }
 
     // TODO: 2022-01-27 3 unit testai javoje (ctrl+shift+t)
-    // TODO: 2022-01-27 behavioural design patterna
-    // TODO: 2022-01-27 fix one mistake (hits)
 
     public Player getOwner() {
         return owner;
